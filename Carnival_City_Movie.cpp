@@ -26,10 +26,16 @@ const int MAX_CLIENTS = 100; // maximum number of records the array can hold
 //          the separator.
 // ------------------------------------------------------------
 string trim(const string& s) {
-    size_t start = s.find_first_not_of(" \t\r\n");
-    size_t end = s.find_last_not_of(" \t\r\n");
-    if (start == string::npos) return ""; // string is all whitespace
-    return s.substr(start, end - start + 1);
+    const auto WHITESPACE = " \t\n\r\f\v";
+    size_t start = s.find_first_not_of(WHITESPACE);  // first char that is NOT space/tab/return/newline
+    size_t end = s.find_last_not_of(WHITESPACE);     // last char that is NOT space/tab/return/newline
+    
+    // indicates that no non - whitespace character was found.
+    // returns an empty string in that case.
+    if (start == string::npos) 
+        return "";           // string is all whitespace
+    //extracts the portion between the first and last non - whitespace characters, inclusive
+    return s.substr(start, end - start + 1);        // cut from start to end 
 }
 
 // ============================================================
@@ -50,25 +56,77 @@ private:
 
 public:
     // Default constructor: initialises price to 0
-    Client() : price(0.0) {}
+    //Client() : price(0.0) {}
+    Client()
+	{
+		surname = "";
+		firstName = "";
+		movieTitle = "";
+		movieType = "";
+		seatNumber = "";
+		price = 0.0;
+		refNumber = "";
+    }
 
     // ---- Setters: used to populate a Client object ----
-    void setSurname(const string& s) { surname = s; }
-    void setFirstName(const string& s) { firstName = s; }
-    void setMovieTitle(const string& s) { movieTitle = s; }
-    void setMovieType(const string& s) { movieType = s; }
-    void setSeatNumber(const string& s) { seatNumber = s; }
-    void setPrice(double p) { price = p; }
-    void setRefNumber(const string& s) { refNumber = s; }
+    void setSurname(const string& s) 
+    { 
+        this->surname = s; 
+    }
+    void setFirstName(const string& s) 
+    { 
+        this->firstName = s; 
+    }
+    void setMovieTitle(const string& s) 
+    { 
+        this->movieTitle = s; 
+    }
+    void setMovieType(const string& s) 
+    { 
+        this->movieType = s; 
+    }
+    void setSeatNumber(const string& s) 
+    { 
+        this->seatNumber = s; 
+    }
+    void setPrice(double p) 
+    { 
+        this->price = p; 
+    }
+    void setRefNumber(const string& s) 
+    { 
+        this->refNumber = s; 
+    }
 
     // ---- Getters: used to read a Client object's data ----
-    string getSurname()    const { return surname; }
-    string getFirstName()  const { return firstName; }
-    string getMovieTitle() const { return movieTitle; }
-    string getMovieType()  const { return movieType; }
-    string getSeatNumber() const { return seatNumber; }
-    double getPrice()      const { return price; }
-    string getRefNumber()  const { return refNumber; }
+    string getSurname() const
+    { 
+        return surname; 
+    }
+    string getFirstName() const 
+    { 
+        return firstName; 
+    }
+    string getMovieTitle() const 
+    {
+        return movieTitle; 
+    }
+    string getMovieType() const 
+    { 
+        return movieType; 
+    }
+    string getSeatNumber() const 
+    { 
+        return seatNumber; 
+    }
+    double getPrice() const 
+    { 
+        return price; 
+    }
+    string getRefNumber() const 
+    { 
+        return refNumber; 
+    }
 };
 
 // ============================================================
@@ -86,17 +144,23 @@ private:
 
 public:
     // Constructor: no records loaded yet
-    ReservationSystem() : count(0) {}
-
+    //ReservationSystem() : count(0) {}
+    ReservationSystem()
+    {
+        count = 0;
+        inputFileName = "";
+        outputFileName = ""; 
+    }
     // --------------------------------------------------------
     // Function: setFileNames
     // Purpose: Prompts the user for the input and output file
     //          names and stores them for later use.
     // --------------------------------------------------------
-    void setFileNames() {
-        cout << "Enter input file name (e.g. clients_info.dat): ";
+    void setFileNames() 
+    {
+        cout << "Please enter input file name (e.g. clients_info.dat): ";
         cin >> inputFileName;
-        cout << "Enter output file name (e.g. movie_report.txt): ";
+        cout << "Please enter output file name (e.g. movie_report.txt): ";
         cin >> outputFileName;
     }
 
@@ -105,9 +169,11 @@ public:
     // Purpose: Checks whether a given file can be opened.
     //          Returns true if valid/openable, false otherwise.
     // --------------------------------------------------------
-    bool validateFile(const string& fileName) {
+    bool validateFile(const string& fileName) 
+    {
         ifstream file(fileName.c_str());
-        if (!file.is_open()) {
+        if (!file.is_open()) 
+        {
             cout << "Error: could not open file \"" << fileName << "\".\n";
             return false;
         }
@@ -123,8 +189,10 @@ public:
     //          the requirement to read the file character by
     //          character rather than using getline() directly.
     // --------------------------------------------------------
-    void readClientsFromFile() {
-        if (!validateFile(inputFileName)) return;
+    void readClientsFromFile() 
+    {
+        if (!validateFile(inputFileName)) 
+            return;
 
         ifstream file(inputFileName.c_str());
         char ch;
